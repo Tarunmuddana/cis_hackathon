@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAF Dashboard Analyzer</title>
+    <!-- Include Google Fonts for Premium Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --accent-green: #10b981;
+            --card-border: #334155;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 20px 40px;
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        
+        header p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .container {
+            padding: 40px;
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            padding: 25px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .metric-card {
+            grid-column: span 4;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .metric-title {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin: 0;
+        }
+
+        .metric-value.danger {
+            color: var(--accent-red);
+        }
+
+        .chart-card {
+            grid-column: span 6;
+            height: 350px;
+            position: relative;
+        }
+        
+        .chart-card.wide {
+            grid-column: span 12;
+            height: 400px;
+        }
+
+        .chart-card h3 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 10px;
+        }
+        
+        .canvas-container {
+            position: relative;
+            height: calc(100% - 40px);
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .metric-card { grid-column: span 12; }
+            .chart-card { grid-column: span 12; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div>
+            <h1>🛡️ PythonEC2 WAF Dashboard</h1>
+            <p>Live Attack Visualization & Analytics</p>
+        </div>
+        <div>
+            <span style="font-size: 0.85rem; color: #10b981; padding: 5px 12px; border-radius: 20px; background: rgba(16, 185, 129, 0.1);">System Active</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Top Level Metrics -->
+        <div class="card metric-card">
+            <h2 class="metric-title">Total Blocked Requests</h2>
+            <p class="metric-value danger" id="totalAttacks">0</p>
+        </div>
+        
+        <div class="card metric-card">
+            <h2 class="metric-title">Currently Banned IPs</h2>
+            <p class="metric-value" id="bannedCount">0</p>
+        </div>
+        
+        <div class="card metric-card">
+            <h2 class="metric-title">Rule Engine Status</h2>
+            <p class="metric-value" style="color: var(--accent-green);">ON</p>
+        </div>
+
+        <!-- Charts Row 1 -->
+        <div class="card chart-card">
+            <h3>Severity Breakdown</h3>
+            <div class="canvas-container">
+                <canvas id="severityChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card chart-card">
+            <h3>Attack Type Distribution</h3>
+            <div class="canvas-container">
+                <canvas id="typeChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Charts Row 2 -->
+        <div class="card chart-card wide">
+            <h3>Top 5 Aggressive Source IPs</h3>
+            <div class="canvas-container">
+                <canvas id="ipChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/dashboard/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+[
+    {
+        "timestamp": "2026-03-31T09:19:19.112999",
+        "ip_address": "127.0.0.1",
+        "path": "/search",
+        "payload": "q=' OR 1=1",
+        "rule_id": "R001",
+        "rule_name": "Basic SQLi (OR 1=1)",
+        "severity": "HIGH",
+        "attack_type": "SQLi"
+    },
+    {
+        "timestamp": "2026-03-31T09:19:21.168758",
+        "ip_address": "127.0.0.1",
+        "path": "/search",
+        "payload": "q=<script>alert(1)</script>",
+        "rule_id": "R004",
+        "rule_name": "Basic XSS Tags",
+        "severity": "HIGH",
+        "attack_type": "XSS"
+    },
+    {
+        "timestamp": "2026-03-31T09:19:23.224396",
+        "ip_address": "127.0.0.1",
+        "path": "/search",
+        "payload": "q=../../etc/passwd step 0",
+        "rule_id": "R008",
+        "rule_name": "Path Traversal (../)",
+        "severity": "HIGH",
+        "attack_type": "Path Traversal"
+    },
+    {
+        "timestamp": "2026-03-31T09:19:25.278574",
+        "ip_address": "127.0.0.1",
+        "path": "/search",
+        "payload": "q=../../etc/passwd step 1",
+        "rule_id": "R008",
+        "rule_name": "Path Traversal (../)",
+        "severity": "HIGH",
+        "attack_type": "Path Traversal"
+    },
+    {
+        "timestamp": "2026-03-31T09:19:27.332229",
+        "ip_address": "127.0.0.1",
+        "path": "/search",
+        "payload": "q=../../etc/passwd step 2",
+        "rule_id": "R008",
+        "rule_name": "Path Traversal (../)",
+        "severity": "HIGH",
+        "attack_type": "Path Traversal"
+    }
+]

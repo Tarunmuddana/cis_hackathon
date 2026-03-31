@@ -1,9 +1,14 @@
 from flask import Flask, jsonify, request, render_template, send_from_directory
+from werkzeug.middleware.proxy_fix import ProxyFix
 from waf.request_analyzer import analyze_request
 from waf.logger import get_logs
 from waf.attack_tracker import get_banned_ips
 
 app = Flask(__name__, template_folder='dashboard')
+
+# Trust 1 proxy hop (Nginx). This makes request.remote_addr return
+# the real client IP from the X-Forwarded-For header instead of 127.0.0.1.
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 # -------------------------------------------------------------
 # WAF Middleware

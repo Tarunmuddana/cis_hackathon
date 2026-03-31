@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, render_template, send_from_directory
 from werkzeug.middleware.proxy_fix import ProxyFix
 from waf.request_analyzer import analyze_request
 from waf.logger import get_logs
-from waf.attack_tracker import get_banned_ips
+from waf.attack_tracker import get_banned_ips, unban_ip
 
 app = Flask(__name__, template_folder='dashboard')
 
@@ -108,7 +108,8 @@ def get_stats():
         "top_ips": top_ips,
         "severity": severity_breakdown,
         "timeline": timeline,
-        "banned_ips_count": len(get_banned_ips())
+        "banned_ips_count": len(get_banned_ips()),
+        "banned_ips": get_banned_ips()
     })
 
 @app.route('/api/logs', methods=['GET'])
@@ -117,6 +118,17 @@ def get_raw_logs():
     logs = get_logs()
     # Return last 50 logs reversed
     return jsonify(list(reversed(logs[-50:])))
+
+@app.route('/api/unban', methods=['POST'])
+def unban_api():
+    """Unban a specific IP address by resetting its attack count."""
+    data = request.get_json(silent=True)
+    if not data or 'ip' not in data:
+        return jsonify({"error": "Missing 'ip' in JSON body"}), 400
+    
+    ip_to_unban = data['ip']
+    unban_ip(ip_to_unban)
+    return jsonify({"message": f"IP {ip_to_unban} has been unbanned successfully."})
 
 if __name__ == '__main__':
     # Run the Flask app on all interfaces (0.0.0.0) so it's accessible externally on EC2

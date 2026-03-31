@@ -22,3 +22,10 @@ def get_banned_ips():
     Return a list of all currently blocked IP addresses.
     """
     return [ip for ip, count in ATTACK_COUNTS.items() if count >= BLOCK_THRESHOLD]
+
+def unban_ip(ip_address):
+    """
+    Remove an IP from the banned list by resetting its attack count.
+    """
+    if ip_address in ATTACK_COUNTS:
+        del ATTACK_COUNTS[ip_address]
